@@ -1,0 +1,36 @@
+/*
+
+Game.spawns['Spawn1'].spawnCreep( [WORK, CARRY, MOVE], 'Upgrader1' );
+Game.creeps['Upgrader1'].memory.role = 'upgrader';
+
+*/
+
+var roleUpgrader = {
+
+    /** @param {Creep} creep **/
+    run: function(creep) {
+
+        if(creep.memory.upgrading && creep.store[RESOURCE_ENERGY] == 0) {
+            creep.memory.upgrading = false;
+            creep.say('🔄 harvest');
+	    }
+	    if(!creep.memory.upgrading && creep.store.getFreeCapacity() == 0) {
+	        creep.memory.upgrading = true;
+	        creep.say('⚡ upgrade');
+	    }
+
+	    if(creep.memory.upgrading) {
+            if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
+            }
+        }
+        else {
+	        var cont1 = Game.getObjectById("6c8dfb970585cd8");
+            if(creep.withdraw(cont1, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE ) {
+                creep.moveTo(cont1);
+            }
+    	}
+    }
+};
+
+module.exports = roleUpgrader;
